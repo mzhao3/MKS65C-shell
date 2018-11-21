@@ -7,6 +7,40 @@
 #include <errno.h>
 #include <signal.h>
 
-int main() {
+char ** parse_args( char * line ) {
+  char ** cmds = (char **) malloc(10 * sizeof(char *));
+  char * p = line;
+  int i;
+  for (i = 0; p; i++ ) {
+    cmds[i] = strsep( &p, " " );
+    printf("[%s]\n", cmds[i]);
+  }
+  cmds[i] = NULL;
+  return cmds;
+}
+
+int main(int argc, char *argv[]) {
+  int status;
+  int x = getpid();
+  fork();
+  while(1) {
+    if (getpid() != x) {
+      char path[100];
+
+      printf("shell$ ");
+      scanf("%99s", path);
+      printf("\nthe thing u got:%s\n", path);
+
+      char *s1 = path;
+      char ** args = parse_args( s1 );
+      printf("%s", *args);
+      execvp(args[1], &args[1]);
+      free(args);
+
+
+
+    }
+
+  }
   return 0;
 }
