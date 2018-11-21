@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,7 +35,14 @@ int main(int argc, char *argv[]) {
       char *s1 = path;
       char ** args = parse_args( s1 );
       printf("%s", *args);
-      execvp(args[1], &args[1]);
+      int f = fork();
+      
+      if(f){
+	wait(NULL);
+	  }
+      if(!f){
+      execvp(args[0], args);
+      }
       free(args);
 
 
