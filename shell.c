@@ -20,7 +20,7 @@ char ** parse_args( char * line ) {
   int i;
   for (i = 0; p ; i++ ) {
     cmds[i] = strsep( &p, " " );
-    printf("[%s]\n", cmds[i]);
+    //printf("[%s]\n", cmds[i]);
   }
   cmds[i] = NULL;
 
@@ -30,11 +30,13 @@ char ** parse_args( char * line ) {
 }
 
 void noSpaacepls(char * oboi){
-  int i, c;
-  for(i=c=0; oboi[i]; ++i)
-    if(!isspace(oboi[i]) || (i > 0 && !isspace(oboi[i-1])))
-      oboi[c++] = oboi[i];
+  int i = 0;
+  int c = 0;
+  for(; oboi[i]; ++i)
+    if((i > 0 && !isspace(oboi[i-1]) || !isspace(oboi[i])))
+      oboi[c++]= oboi[i];
     oboi[c] = '\0';
+
 }
 
 int main(int argc, char *argv[]) {
