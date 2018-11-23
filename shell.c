@@ -29,13 +29,28 @@ char ** parse_args( char * line ) {
 
 }
 
+char ** parsesemi_args(char * pine){
+  while(*pine == ' '){
+    pine++;
+  }
+  char ** pmds = (char **) malloc(10 * sizeof(char *));
+  char * c = pine;
+
+  int i;
+  for (i = 0; c ; i++ ) {
+    pmds[i] = strsep( &c, ";" );
+  }
+  pmds[i] = NULL;
+  return pmds;
+}
+
 void noSpaacepls(char * oboi){
   int i = 0;
   int c = 0;
   for(; oboi[i]; ++i)
-    if((i > 0 && !isspace(oboi[i-1]) || !isspace(oboi[i])))
-      oboi[c++]= oboi[i];
-    oboi[c] = '\0';
+  if((i > 0 && !isspace(oboi[i-1]) || !isspace(oboi[i])))
+  oboi[c++]= oboi[i];
+  oboi[c] = '\0';
 
 }
 
@@ -55,19 +70,22 @@ int main(int argc, char *argv[]) {
       noSpaacepls(path);
 
       char *s1 = path;
-      char ** args = parse_args( s1 );
 
+      char **separgs = parsesemi_args(s1);
 
-      int f = fork();
-      if(f){
-        wait(NULL);
+      int i;
+      for(i = 0; separgs[i];i++){
+        char ** args = parse_args( separgs[i] );
+
+        int f = fork();
+        if(f){
+          wait(NULL);
+        }
+        if(!f){
+          execvp(args[0], args);
+        }
+        free(args);
       }
-      if(!f){
-        execvp(args[0], args);
-      }
-      free(args);
-
-
 
     }
 
