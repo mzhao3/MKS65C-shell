@@ -48,7 +48,7 @@ void noSpaacepls(char * oboi){
   int i = 0;
   int c = 0;
   for(; oboi[i]; ++i)
-  if((i > 0 && !isspace(oboi[i-1]) || !isspace(oboi[i])))
+  if(((i > 0 && !isspace(oboi[i-1])) || !isspace(oboi[i])))
   oboi[c++]= oboi[i];
   oboi[c] = '\0';
 
@@ -57,16 +57,16 @@ void noSpaacepls(char * oboi){
 int main(int argc, char *argv[]) {
   int x = getpid();
 
-  fork();
+  //fork();
   while(1) {
-    if (getpid() != x) {
+    //if (getpid() != x) {
       char path[100];
 
-      printf("shell$ ");
+      printf("shell@PC$ ");
       fgets(path,100,stdin );
 
       path[strlen(path)-1] = '\0';
-      printf("\nthe thing u got:%s\n", path);
+      //printf("\nthe thing u got:%s\n", path);
       noSpaacepls(path);
 
       char *s1 = path;
@@ -77,11 +77,29 @@ int main(int argc, char *argv[]) {
       for(i = 0; separgs[i];i++){
         char ** args = parse_args( separgs[i] );
 
+        if (!strcmp(args[0], "exit")) {
+          printf("Exiting shell...\n");
+          exit(0);
+        }
+
+        if (!strcmp(args[0], "cd")) {
+          char * path2 = args[1];
+          //printf("%s\n", path);
+          //if (path2 == NULL)
+            //path2 = ".";
+          //printf("%s\n", path);
+          int err = chdir(path2);
+          //printf("%d\n", err);
+          if (err == -1)
+            printf("%s\n", strerror(errno));
+
+        }
         int f = fork();
         if(f){
           wait(NULL);
         }
         if(!f){
+
           execvp(args[0], args);
         }
         free(args);
@@ -89,6 +107,6 @@ int main(int argc, char *argv[]) {
 
     }
 
-  }
+  //}
   return 0;
 }
