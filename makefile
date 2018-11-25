@@ -1,5 +1,12 @@
-all : shell.c
-	gcc shell.c
+all: shell.o
+	gcc -o hello shell.o
+
+shell.o:shell.c
+	gcc -c shell.c
 
 run:
-	./a.out
+	./hello
+
+clear:
+	rm *.o
+	rm *out

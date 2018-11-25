@@ -29,6 +29,8 @@ char ** parse_args( char * line ) {
 
 }
 
+//It takes a char pointer and looks through it, everytime it finds a semi colon, it
+//seperates it and returns a pointer to a pointer of the seperated parts
 char ** parsesemi_args(char * pine){
   while(*pine == ' '){
     pine++;
@@ -44,6 +46,7 @@ char ** parsesemi_args(char * pine){
   return pmds;
 }
 
+//it takes a char pointer and deletes any extra white spaces does not return
 void noSpaacepls(char * oboi){
   int i = 0;
   int c = 0;
