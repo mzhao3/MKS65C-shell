@@ -2,10 +2,11 @@
 
 ## Features
 It can execute commands separated by semi colons and any number of extra white spaces
-
+<pre>
 ## Bugs
 extra white spaces proceeded by nothing will not run the functions, i.e. <br />
-ls________ -l <br />
+ls            -l <br />
+<pre>
 will work<br />
 ls  <br />
 with empty spaces will not<br />
