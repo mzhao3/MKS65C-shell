@@ -63,52 +63,54 @@ int main(int argc, char *argv[]) {
   //fork();
   while(1) {
     //if (getpid() != x) {
-      char path[100];
+    char path[100];
 
-      printf("shell@PC$ ");
-      fgets(path,100,stdin );
+    printf("shell@PC$ ");
+    fgets(path,100,stdin );
 
-      path[strlen(path)-1] = '\0';
-      //printf("\nthe thing u got:%s\n", path);
-      noSpaacepls(path);
+    path[strlen(path)-1] = '\0';
+    //printf("\nthe thing u got:%s\n", path);
+    noSpaacepls(path);
 
-      char *s1 = path;
+    char *s1 = path;
 
-      char **separgs = parsesemi_args(s1);
+    char **separgs = parsesemi_args(s1);
 
-      int i;
-      for(i = 0; separgs[i];i++){
-        char ** args = parse_args( separgs[i] );
+    int i;
+    for(i = 0; separgs[i];i++){
+      char ** args = parse_args( separgs[i] );
 
-        if (!strcmp(args[0], "exit")) {
-          printf("Exiting shell...\n");
-          exit(0);
-        }
-
-        if (!strcmp(args[0], "cd")) {
-          char * path2 = args[1];
-          //printf("%s\n", path);
-          //if (path2 == NULL)
-            //path2 = ".";
-          //printf("%s\n", path);
-          int err = chdir(path2);
-          //printf("%d\n", err);
-          if (err == -1)
-            printf("%s\n", strerror(errno));
-
-        }
-        int f = fork();
-        if(f){
-          wait(NULL);
-        }
-        if(!f){
-
-          execvp(args[0], args);
-        }
-        free(args);
+      if (!strcmp(args[0], "exit")) {
+        printf("Exiting shell...\n");
+        exit(0);
       }
 
+      if (!strcmp(args[0], "cd")) {
+        char * path2 = args[1];
+        //printf("%s\n", path);
+        //if (path2 == NULL)
+        //path2 = ".";
+        //printf("%s\n", path);
+        int err = chdir(path2);
+        //printf("%d\n", err);
+        if (err == -1)
+        printf("%s\n", strerror(errno));
+
+      }
+      int f = fork();
+      if(f){
+        wait(NULL);
+      }
+      if(!f){
+        execvp(args[0], args);
+        if(errno ==2){
+          printf("%s: command not found \n",args[0]);
+        }
+      }
+      free(args);
     }
+
+  }
 
   //}
   return 0;
