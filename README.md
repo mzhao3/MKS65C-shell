@@ -10,6 +10,8 @@ will work<br />
 ls  <br />
 with empty spaces will not<br />
 
+On some machines(OSX), 'cd'-ing into a known directory will print out 'No such file or directory' but change directories anyways.
+
 ## Functions
 char ** parse_args( char * line );<br />
 char ** parsesemi_args(char * pine);<br />
