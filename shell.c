@@ -7,6 +7,8 @@
 #include <errno.h>
 #include <signal.h>
 #include <ctype.h>
+#include <pwd.h>
+#include <limits.h>
 
 char ** parse_args( char * line ) {
   while(*line == ' '){
@@ -59,21 +61,24 @@ void noSpaacepls(char * oboi){
 
 int main(int argc, char *argv[]) {
   int x = getpid();
-
-  //fork();
+  char * user = getpwuid(getuid()) -> pw_name;
+  char host[64];
+  gethostname(host,64);
+  char cwd[PATH_MAX];
   while(1) {
-    //if (getpid() != x) {
     char path[100];
+    if(getcwd(cwd,sizeof(cwd))!=NULL){
+      printf("%s@%s:%s$ ",user,host,cwd);
+    }
+    else{
+      printf("error");
+    }
 
-    printf("shell@PC$ ");
     fgets(path,100,stdin );
-
     path[strlen(path)-1] = '\0';
-    //printf("\nthe thing u got:%s\n", path);
     noSpaacepls(path);
 
     char *s1 = path;
-
     char **separgs = parsesemi_args(s1);
 
     int i;
@@ -98,10 +103,11 @@ int main(int argc, char *argv[]) {
 
       }
       int f = fork();
+
       if(f){
         wait(NULL);
       }
-      if(!f){
+      if(!f && strcmp(args[0], "cd")){
         execvp(args[0], args);
         if(errno ==2){
           printf("%s: command not found \n",args[0]);
