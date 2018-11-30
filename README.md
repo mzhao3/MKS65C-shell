@@ -13,6 +13,5 @@ with empty spaces will not<br />
 
 ## Functions
 char ** parse_args( char * line );<br />
-char ** parsesemi_args(char * pine);<br />
 void noSpaacepls(char * oboi);<br />
 int main(int argc, char *argv[]);<br />

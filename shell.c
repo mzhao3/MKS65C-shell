@@ -10,7 +10,8 @@
 #include <pwd.h>
 #include <limits.h>
 
-char ** parse_args( char * line ) {
+//looks through a pointer and slices by input
+char ** parse_args( char * line, const char * input ) {
   while(*line == ' '){
     line++;
   }
@@ -18,34 +19,14 @@ char ** parse_args( char * line ) {
   char ** cmds = (char **) malloc(10 * sizeof(char *));
   char * p = line;
 
-
   int i;
   for (i = 0; p ; i++ ) {
-    cmds[i] = strsep( &p, " " );
+    cmds[i] = strsep( &p, input );
     //printf("[%s]\n", cmds[i]);
   }
   cmds[i] = NULL;
-
-
   return cmds;
 
-}
-
-//It takes a char pointer and looks through it, everytime it finds a semi colon, it
-//seperates it and returns a pointer to a pointer of the seperated parts
-char ** parsesemi_args(char * pine){
-  while(*pine == ' '){
-    pine++;
-  }
-  char ** pmds = (char **) malloc(10 * sizeof(char *));
-  char * c = pine;
-
-  int i;
-  for (i = 0; c ; i++ ) {
-    pmds[i] = strsep( &c, ";" );
-  }
-  pmds[i] = NULL;
-  return pmds;
 }
 
 //it takes a char pointer and deletes any extra white spaces does not return
@@ -53,8 +34,8 @@ void noSpaacepls(char * oboi){
   int i = 0;
   int c = 0;
   for(; oboi[i]; ++i)
-  if(((i > 0 && !isspace(oboi[i-1])) || !isspace(oboi[i])))
-  oboi[c++]= oboi[i];
+    if(((i > 0 && !isspace(oboi[i-1])) || !isspace(oboi[i])))
+      oboi[c++]= oboi[i];
   oboi[c] = '\0';
 
 }
@@ -79,11 +60,11 @@ int main(int argc, char *argv[]) {
     noSpaacepls(path);
 
     char *s1 = path;
-    char **separgs = parsesemi_args(s1);
+    char **separgs = parse_args(s1, ";");
 
     int i;
     for(i = 0; separgs[i];i++){
-      char ** args = parse_args( separgs[i] );
+      char ** args = parse_args( separgs[i], " " );
 
       if (!strcmp(args[0], "exit")) {
         printf("Exiting shell...\n");
@@ -100,18 +81,20 @@ int main(int argc, char *argv[]) {
         //printf("%d\n", err);
         if (err == -1)
         printf("%s\n", strerror(errno));
-
       }
       int f = fork();
 
       if(f){
         wait(NULL);
       }
+
+
       if(!f && strcmp(args[0], "cd")){
         execvp(args[0], args);
         if(errno ==2){
           printf("%s: command not found \n",args[0]);
         }
+
       }
       free(args);
     }
