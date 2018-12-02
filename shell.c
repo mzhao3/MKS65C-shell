@@ -40,12 +40,14 @@ void noSpaacepls(char * oboi){
 
   int b = strlen(oboi)-1;
   for(;b > 1;b--){
+
     if(oboi[b] == ' '){
       oboi[b] = '\0';
-      if(oboi[b-1] != ' '){
-        break;
-      }
     }
+    if(oboi[b] != ' '){
+      break;
+    }
+
   }
 
 }
