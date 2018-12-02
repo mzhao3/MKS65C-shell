@@ -38,8 +38,19 @@ void noSpaacepls(char * oboi){
       oboi[c++]= oboi[i];
   oboi[c] = '\0';
 
-}
+  int b = strlen(oboi)-1;
+  for(;b > 1;b--){
+    if(oboi[b] == ' '){
+      oboi[b] = '\0';
+      if(oboi[b-1] != ' '){
+        break;
+      }
+    }
+  }
 
+}
+//[what the heckk;what      ]
+//[what the heckk;what]
 int main(int argc, char *argv[]) {
   int x = getpid();
   char * user = getpwuid(getuid()) -> pw_name;
@@ -62,9 +73,11 @@ int main(int argc, char *argv[]) {
     char *s1 = path;
     char **separgs = parse_args(s1, ";");
 
+
     int i;
     for(i = 0; separgs[i];i++){
-      char ** args = parse_args( separgs[i], " " );
+      char ** args = parse_args(separgs[i], " " );
+
 
       if (!strcmp(args[0], "exit")) {
         printf("Exiting shell...\n");
@@ -82,13 +95,12 @@ int main(int argc, char *argv[]) {
         if (err == -1)
         printf("%s\n", strerror(errno));
       }
+
       int f = fork();
 
       if(f){
         wait(NULL);
       }
-
-
       if(!f && strcmp(args[0], "cd")){
         execvp(args[0], args);
         if(errno ==2){
