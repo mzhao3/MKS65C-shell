@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
 
     fgets(path,100,stdin );
     path[strlen(path)-1] = '\0';
-    noSpaacepls(path);
+    //noSpaacepls(path);
 
     char *s1 = path;
     char **separgs = parse_args(s1, ";");
@@ -78,6 +78,7 @@ int main(int argc, char *argv[]) {
 
     int i;
     for(i = 0; separgs[i];i++){
+      noSpaacepls(separgs[i]);
       char ** args = parse_args(separgs[i], " " );
 
 
