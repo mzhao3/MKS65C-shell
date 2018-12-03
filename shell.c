@@ -72,210 +72,244 @@ int checkfordirections(char * line){
   return 0;
 }
 
- int main(int argc, char *argv[]) {
-   int x = getpid();
-   char * user = getpwuid(getuid()) -> pw_name;
-   char host[64];
-   gethostname(host,64);
-   char cwd[PATH_MAX];
-   while(1) {
-     char path[100];
-     if(getcwd(cwd,sizeof(cwd))!=NULL){
-       printf("%s@%s:%s$ ",user,host,cwd);
-     }
-     else{
-       printf("error");
-     }
+int main(int argc, char *argv[]) {
+  int x = getpid();
+  char * user = getpwuid(getuid()) -> pw_name;
+  char host[64];
+  gethostname(host,64);
+  char cwd[PATH_MAX];
+  while(1) {
+    char path[100];
+    if(getcwd(cwd,sizeof(cwd))!=NULL){
+      printf("%s@%s:%s$ ",user,host,cwd);
+    }
+    else{
+      printf("error");
+    }
 
-     fgets(path,100,stdin );
-     path[strlen(path)-1] = '\0';
+    fgets(path,100,stdin );
+    path[strlen(path)-1] = '\0';
 
-     char *s1 = path;
-     char **separgs = parse_args(s1, ";");
-
-
-     int i;
-     for(i = 0; separgs[i];i++){
-       noSpaacepls(separgs[i]);
-       int s;
-       s = checkfordirections(separgs[i]);
+    char *s1 = path;
+    char **separgs = parse_args(s1, ";");
 
 
-       // >
-       if(s == 1){
-         char * tempsplit = separgs[i];
-         printf("basic redirect \n");
-         char * firstcmd;
-         char * secondfile;
-         firstcmd = (char*)malloc(100*sizeof(char));
-         secondfile = (char*)malloc(100*sizeof(char));
-
-         char ** direct = parse_args(tempsplit,">");
-         firstcmd = direct[0];
-         noSpaacepls(firstcmd);
-         char ** firstcmdboi = parse_args(firstcmd," ");
-         char ** secondfileboi = parse_args(direct[1]," ");
-         secondfile = secondfileboi[0];
-         noSpaacepls(secondfile);
+    int i;
+    for(i = 0; separgs[i];i++){
+      noSpaacepls(separgs[i]);
+      int s;
+      s = checkfordirections(separgs[i]);
 
 
-         int f = fork();
+      // >
+      if(s == 1){
+        char * tempsplit = separgs[i];
+        //printf("basic redirect \n");
+        char * firstcmd;
+        char * secondfile;
+        firstcmd = (char*)malloc(100*sizeof(char));
+        secondfile = (char*)malloc(100*sizeof(char));
 
-         if(f){
-           wait(NULL);
-         }
-         if(!f){
-           int file = open(secondfile, O_WRONLY | O_TRUNC | O_CREAT);
-           if(file == -1){
-             printf("error \n");
-             return 0;
-           }
-           int copy = dup(1);
-           dup2(file,1);
-           execvp(firstcmdboi[0],firstcmdboi);
-           dup2(copy,1);
-           close(file);
-           return 0;
-         }
+        char ** direct = parse_args(tempsplit,">");
+        firstcmd = direct[0];
+        noSpaacepls(firstcmd);
+        char ** firstcmdboi = parse_args(firstcmd," ");
+        char ** secondfileboi = parse_args(direct[1]," ");
+        secondfile = secondfileboi[0];
+        noSpaacepls(secondfile);
 
 
-       }
-       // >>
-       if(s == 2){
-         char * tempsplit = separgs[i];
-         printf("append redirect \n");
-         char * firstcmd;
-         char * secondfile;
-         firstcmd = (char*)malloc(100*sizeof(char));
-         secondfile = (char*)malloc(100*sizeof(char));
+        int f = fork();
 
-         char ** direct = parse_args(tempsplit,">>");
-         firstcmd = direct[0];
-         noSpaacepls(firstcmd);
-         char ** firstcmdboi = parse_args(firstcmd," ");
-         char ** secondfileboi = parse_args(direct[1]," ");
-         secondfile = secondfileboi[0];
-         noSpaacepls(secondfile);
-         printf("%s \n",firstcmd);
-         printf("%s \n",secondfile);
-
-
-         int f = fork();
-
-         if(f){
-           wait(NULL);
-         }
-         if(!f){
-           int file = open(secondfile, O_WRONLY| O_APPEND | O_CREAT);
-           if(file == -1){
-             printf("error \n");
-             return 0;
-           }
-           int copy = dup(1);
-           dup2(file,1);
-           execvp(firstcmdboi[0],firstcmdboi);
-           dup2(copy,1);
-           close(file);
-           return 0;
-         }
+        if(f){
+          wait(NULL);
+        }
+        if(!f){
+          int file = open(secondfile, O_WRONLY | O_TRUNC | O_CREAT);
+          if(file == -1){
+            printf("error \n");
+            return 0;
+          }
+          int copy = dup(1);
+          dup2(file,1);
+          execvp(firstcmdboi[0],firstcmdboi);
+          dup2(copy,1);
+          close(file);
+          return 0;
+        }
 
 
-       }
-       //<
-       if(s == 3){
-         char * tempsplit = separgs[i];
-         printf("back redirect \n");
+      }
+      // >>
+      if(s == 2){
+        char * tempsplit = separgs[i];
+        char ** thing = parse_args(tempsplit,">>");
 
-         char * firstcmd;
-         char * secondfile;
-         firstcmd = (char*)malloc(100*sizeof(char));
-         secondfile = (char*)malloc(100*sizeof(char));
+        //printf("append redirect \n");
+        char ** firstcmd;
+        char ** secondfile;
+        firstcmd = (char**)malloc(100*sizeof(char));
+        secondfile = (char**)malloc(100*sizeof(char));
 
-         char ** direct = parse_args(tempsplit,"<");
-         firstcmd = direct[0];
-         noSpaacepls(firstcmd);
-         char ** firstcmdboi = parse_args(firstcmd," ");
-         char ** secondfileboi = parse_args(direct[1]," ");
-         secondfile = secondfileboi[0];
-         noSpaacepls(secondfile);
+        //char ** direct = parse_args(tempsplit,">>");
+        //firstcmd = direct[0];
+        noSpaacepls(thing[0]);
+        noSpaacepls(thing[2]);
+        firstcmd = parse_args(thing[0], " ");
+        secondfile = parse_args(thing [2], " ");
 
-         int f = fork();
+        //secondfile = direct[1];
+        // printf("first half\n");
+        // print_arr(firstcmd);
+        // printf("second half\n");
+        // print_arr(secondfile);
+        char * path = secondfile[0];
 
-         if(f){
-           wait(NULL);
-         }
-         if(!f){
+        int f = fork();
 
-           int file = open(secondfile, O_RDONLY);
-           if(file == -1){
-             printf("error \n");
-             return 0;
-           }
-           int copy = dup(0);
-           dup2(file,0);
-           execvp(firstcmdboi[0],firstcmdboi);
-           dup2(copy,0);
-           close(file);
-           return 0;
-         }
-
-       }
-       // |
-       if(s == 4){
-         char * tempsplit = separgs[i];
-         printf("pipes \n");
-         char * firstcmd;
-         char * secondfile;
-         firstcmd = (char*)malloc(100*sizeof(char));
-         secondfile = (char*)malloc(100*sizeof(char));
-
-         char ** direct = parse_args(tempsplit,"|");
-         firstcmd = direct[0];
-         secondfile = direct[1];
-
-         printf("command: %s\n",firstcmd);
-         printf("file: %s\n",secondfile);
-       }
-
-       //execute regular commands
-       if(s == 0){
-         char ** args = parse_args(separgs[i], " " );
-
-         if (!strcmp(args[0], "exit")) {
-           printf("Exiting shell...\n");
-           exit(0);
-         }
-
-         if (!strcmp(args[0], "cd")) {
-           char * path2 = args[1];
-           //printf("%s\n", path);
-           //if (path2 == NULL)
-           //path2 = ".";
-           //printf("%s\n", path);
-           int err = chdir(path2);
-           //printf("%d\n", err);
-           if (err == -1)
-           printf("%s\n", strerror(errno));
-         }
-
-         int f = fork();
-
-         if(f){
-           wait(NULL);
-         }
-         if(!f && strcmp(args[0], "cd")){
-           execvp(args[0], args);
-           if(errno ==2){
-             printf("%s: command not found \n",args[0]);
-           }
-
-         }
-         free(args);
-       }
-
-     }
-   }
+        if(f){
+          wait(NULL);
+        }
+        if(!f){
+          int file = open(path, O_CREAT| O_WRONLY| O_APPEND , 0777);
+          if(file == -1){
+            printf("%s", strerror(errno));
+            return 0;
+          }
+          int copy = dup(1);
+          dup2(file,1);
+          execvp(firstcmd[0],firstcmd);
+          dup2(copy,1);
+          close(file);
+          return 0;
+        }
 
 
-   return 0;
- }
+      }
+      //<
+      if(s == 3){
+        char * tempsplit = separgs[i];
+        //printf("back redirect \n");
+
+        char * firstcmd;
+        char * secondfile;
+        firstcmd = (char*)malloc(100*sizeof(char));
+        secondfile = (char*)malloc(100*sizeof(char));
+
+        char ** direct = parse_args(tempsplit,"<");
+        firstcmd = direct[0];
+        noSpaacepls(firstcmd);
+        char ** firstcmdboi = parse_args(firstcmd," ");
+        char ** secondfileboi = parse_args(direct[1]," ");
+        secondfile = secondfileboi[0];
+        noSpaacepls(secondfile);
+
+        int f = fork();
+
+        if(f){
+          wait(NULL);
+        }
+        if(!f){
+
+          int file = open(secondfile, O_RDONLY);
+          if(file == -1){
+            printf("error \n");
+            return 0;
+          }
+          int copy = dup(0);
+          dup2(file,0);
+          execvp(firstcmdboi[0],firstcmdboi);
+          dup2(copy,0);
+          close(file);
+          return 0;
+        }
+
+      }
+      // |
+      if(s == 4){
+        //char * tempsplit = separgs[i];
+        //printf("pipes \n");
+        char ** thing = parse_args(separgs[i],"|");
+        noSpaacepls(thing[0]);
+        noSpaacepls(thing[1]);
+        char ** firstcmd= parse_args(thing[0], " ");
+        char ** secondcmd= parse_args(thing [1], " ");
+
+
+        int p[2];
+        pipe(p);
+        int in = dup(0);
+        int out = dup(1);
+        int f = fork();
+        if(!f){
+          int g = fork();
+          if (!g) {
+            close( STDOUT_FILENO );
+            close(p[0]);
+            dup2( p[1], STDOUT_FILENO );
+            execvp(firstcmd[0], firstcmd);
+
+          }
+          else {
+            wait(NULL);
+            close(STDIN_FILENO);
+            close(p[1]);
+            dup2( p[0], STDIN_FILENO );
+            execvp(secondcmd[0], secondcmd);
+
+          }
+
+        }
+        else {
+          int status = 0;
+          close(p[0]);
+          close(p[1]);
+          wait(&status);
+          dup2(in,0);
+          dup2(out,1);
+        }
+
+      }
+
+      //execute regular commands
+      if(s == 0){
+        char ** args = parse_args(separgs[i], " " );
+
+        if (!strcmp(args[0], "exit")) {
+          printf("Exiting shell...\n");
+          exit(0);
+        }
+
+        if (!strcmp(args[0], "cd")) {
+          char * path2 = args[1];
+          //printf("%s\n", path);
+          //if (path2 == NULL)
+          //path2 = ".";
+          //printf("%s\n", path);
+          int err = chdir(path2);
+          //printf("%d\n", err);
+          if (err == -1)
+          printf("%s\n", strerror(errno));
+        }
+
+        int f = fork();
+
+        if(f){
+          wait(NULL);
+        }
+        if(!f && strcmp(args[0], "cd")){
+          execvp(args[0], args);
+          if(errno ==2){
+            printf("%s: command not found \n",args[0]);
+          }
+
+        }
+        free(args);
+      }
+
+    }
+  }
+
+
+  return 0;
+}
