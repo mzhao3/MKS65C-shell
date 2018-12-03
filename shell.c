@@ -113,10 +113,11 @@ int checkfordirections(char * line){
          char ** direct = parse_args(tempsplit,">");
          firstcmd = direct[0];
          noSpaacepls(firstcmd);
-         noSpaacepls(secondfile);
          char ** firstcmdboi = parse_args(firstcmd," ");
          char ** secondfileboi = parse_args(direct[1]," ");
          secondfile = secondfileboi[0];
+         noSpaacepls(secondfile);
+
 
          int f = fork();
 
@@ -151,9 +152,13 @@ int checkfordirections(char * line){
          char ** direct = parse_args(tempsplit,">>");
          firstcmd = direct[0];
          noSpaacepls(firstcmd);
-         noSpaacepls(secondfile);
          char ** firstcmdboi = parse_args(firstcmd," ");
-         secondfile = direct[1];
+         char ** secondfileboi = parse_args(direct[1]," ");
+         secondfile = secondfileboi[0];
+         noSpaacepls(secondfile);
+         printf("%s \n",firstcmd);
+         printf("%s \n",secondfile);
+
 
          int f = fork();
 
@@ -174,11 +179,13 @@ int checkfordirections(char * line){
            return 0;
          }
 
+
        }
        //<
        if(s == 3){
          char * tempsplit = separgs[i];
          printf("back redirect \n");
+
          char * firstcmd;
          char * secondfile;
          firstcmd = (char*)malloc(100*sizeof(char));
@@ -186,10 +193,32 @@ int checkfordirections(char * line){
 
          char ** direct = parse_args(tempsplit,"<");
          firstcmd = direct[0];
-         secondfile = direct[1];
+         noSpaacepls(firstcmd);
+         char ** firstcmdboi = parse_args(firstcmd," ");
+         char ** secondfileboi = parse_args(direct[1]," ");
+         secondfile = secondfileboi[0];
+         noSpaacepls(secondfile);
 
-         printf("command: %s\n",firstcmd);
-         printf("file: %s\n",secondfile);
+         int f = fork();
+
+         if(f){
+           wait(NULL);
+         }
+         if(!f){
+
+           int file = open(secondfile, O_RDONLY);
+           if(file == -1){
+             printf("error \n");
+             return 0;
+           }
+           int copy = dup(0);
+           dup2(file,0);
+           execvp(firstcmdboi[0],firstcmdboi);
+           dup2(copy,0);
+           close(file);
+           return 0;
+         }
+
        }
        // |
        if(s == 4){
