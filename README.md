@@ -2,12 +2,12 @@
 By Kevin Ly and Maggie Zhao
 
 ## Features
-  Executes commands by forking
-  Parses multiple commands with ;
-  Change directories and exits  
-  Works with any white space
-  Simple Redirects with >, >>, >
-  Simple Pipes
+  Executes commands by forking <br />
+  Parses multiple commands with ;<br />
+  Change directories and exits  <br />
+  Works with any white space<br />
+  Simple Redirects with >, >>, ><br />
+  Simple Pipes<br />
 
 ## Attempted
   Tab completion
