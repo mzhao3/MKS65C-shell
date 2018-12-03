@@ -31,9 +31,6 @@ char ** parse_args( char * line, const char * input ) {
 
 //it takes a char pointer and deletes any extra white spaces does not return
 void noSpaacepls(char * oboi){
-  while(*oboi == ' '){
-    oboi++;
-  }
   int i = 0;
   int c = 0;
   for(; oboi[i]; ++i)
@@ -118,7 +115,8 @@ int checkfordirections(char * line){
          noSpaacepls(firstcmd);
          noSpaacepls(secondfile);
          char ** firstcmdboi = parse_args(firstcmd," ");
-         secondfile = direct[1];
+         char ** secondfileboi = parse_args(direct[1]," ");
+         secondfile = secondfileboi[0];
 
          int f = fork();
 
