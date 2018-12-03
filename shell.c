@@ -31,6 +31,9 @@ char ** parse_args( char * line, const char * input ) {
 
 //it takes a char pointer and deletes any extra white spaces does not return
 void noSpaacepls(char * oboi){
+  while(*oboi == ' '){
+    oboi++;
+  }
   int i = 0;
   int c = 0;
   for(; oboi[i]; ++i)
@@ -112,10 +115,29 @@ int checkfordirections(char * line){
 
          char ** direct = parse_args(tempsplit,">");
          firstcmd = direct[0];
+         noSpaacepls(firstcmd);
+         noSpaacepls(secondfile);
+         char ** firstcmdboi = parse_args(firstcmd," ");
          secondfile = direct[1];
 
-         printf("command: %s\n",firstcmd);
-         printf("file: %s\n",secondfile);
+         int f = fork();
+
+         if(f){
+           wait(NULL);
+         }
+         if(!f){
+           int file = open(secondfile, O_WRONLY | O_TRUNC | O_CREAT);
+           if(file == -1){
+             printf("error \n");
+             return 0;
+           }
+           int copy = dup(1);
+           dup2(file,1);
+           execvp(firstcmdboi[0],firstcmdboi);
+           dup2(copy,1);
+           close(file);
+           return 0;
+         }
 
 
        }
@@ -130,10 +152,29 @@ int checkfordirections(char * line){
 
          char ** direct = parse_args(tempsplit,">>");
          firstcmd = direct[0];
+         noSpaacepls(firstcmd);
+         noSpaacepls(secondfile);
+         char ** firstcmdboi = parse_args(firstcmd," ");
          secondfile = direct[1];
 
-         printf("command: %s\n",firstcmd);
-         printf("file: %s\n",secondfile);
+         int f = fork();
+
+         if(f){
+           wait(NULL);
+         }
+         if(!f){
+           int file = open(secondfile, O_WRONLY| O_APPEND | O_CREAT);
+           if(file == -1){
+             printf("error \n");
+             return 0;
+           }
+           int copy = dup(1);
+           dup2(file,1);
+           execvp(firstcmdboi[0],firstcmdboi);
+           dup2(copy,1);
+           close(file);
+           return 0;
+         }
 
        }
        //<
