@@ -101,25 +101,72 @@ int checkfordirections(char * line){
        s = checkfordirections(separgs[i]);
 
 
-
        // >
        if(s == 1){
+         char * tempsplit = separgs[i];
          printf("basic redirect \n");
-         
+         char * firstcmd;
+         char * secondfile;
+         firstcmd = (char*)malloc(100*sizeof(char));
+         secondfile = (char*)malloc(100*sizeof(char));
+
+         char ** direct = parse_args(tempsplit,">");
+         firstcmd = direct[0];
+         secondfile = direct[1];
+
+         printf("command: %s\n",firstcmd);
+         printf("file: %s\n",secondfile);
+
+
        }
-
-
        // >>
        if(s == 2){
-         printf("temp 2\n");
+         char * tempsplit = separgs[i];
+         printf("append redirect \n");
+         char * firstcmd;
+         char * secondfile;
+         firstcmd = (char*)malloc(100*sizeof(char));
+         secondfile = (char*)malloc(100*sizeof(char));
+
+         char ** direct = parse_args(tempsplit,">>");
+         firstcmd = direct[0];
+         secondfile = direct[1];
+
+         printf("command: %s\n",firstcmd);
+         printf("file: %s\n",secondfile);
+
        }
        //<
        if(s == 3){
-         printf("temp 3\n");
+         char * tempsplit = separgs[i];
+         printf("back redirect \n");
+         char * firstcmd;
+         char * secondfile;
+         firstcmd = (char*)malloc(100*sizeof(char));
+         secondfile = (char*)malloc(100*sizeof(char));
+
+         char ** direct = parse_args(tempsplit,"<");
+         firstcmd = direct[0];
+         secondfile = direct[1];
+
+         printf("command: %s\n",firstcmd);
+         printf("file: %s\n",secondfile);
        }
        // |
        if(s == 4){
-         printf("temp 4\n");
+         char * tempsplit = separgs[i];
+         printf("pipes \n");
+         char * firstcmd;
+         char * secondfile;
+         firstcmd = (char*)malloc(100*sizeof(char));
+         secondfile = (char*)malloc(100*sizeof(char));
+
+         char ** direct = parse_args(tempsplit,"|");
+         firstcmd = direct[0];
+         secondfile = direct[1];
+
+         printf("command: %s\n",firstcmd);
+         printf("file: %s\n",secondfile);
        }
 
        //execute regular commands
