@@ -18,25 +18,25 @@ By Kevin Ly and Maggie Zhao
 
 
 ## Functions
-shell.c
+shell.c <br />
 handles all line parsing and executing command functions
 
 char ** parse_args( char * line, const char * input);<br />
-input: char * line, const char * input
-returns: an aray from the line using strsep
-strips leading white spaces parses line into array seperated by input
+input: char * line, const char * input <br />
+returns: an aray from the line using strsep<br />
+strips leading white spaces parses line into array seperated by input<br />
 
 void noSpaacepls(char * oboi);<br />
-input: char * oboi
-returns:
-strips white spaces within and after a char array
+input: char * oboi<br />
+returns:<br />
+strips white spaces within and after a char array<br />
 
 int checkfordirections(char * line); <br />
-input: char * line
-returns: a number based on a special character
-">" returns 1
-">>" returns 2
-"<" returns 3
-"|" returns 4
+input: char * line<br />
+returns: a number based on a special character<br />
+">" returns 1<br />
+">>" returns 2<br />
+"<" returns 3<br />
+"|" returns 4<br />
 
 int main(int argc, char *argv[]) ;<br />
