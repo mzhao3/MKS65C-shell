@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
   while(1) {
     char path[100];
     if(getcwd(cwd,sizeof(cwd))!=NULL){
-      printf("%s@%s:%s$ ",user,host,cwd);
+      //printf("%s@%s:%s$ ",user,host,cwd);
     }
     else{
       printf("error");
@@ -306,7 +306,7 @@ int main(int argc, char *argv[]) {
             if(errno ==2){
               printf("%s: command not found \n",args[0]);
             }
-            
+
           }
           free(args);
         }
