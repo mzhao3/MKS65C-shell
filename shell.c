@@ -78,6 +78,8 @@ int main(int argc, char *argv[]) {
   char host[64];
   gethostname(host,64);
   char cwd[PATH_MAX];
+
+
   while(1) {
     char path[100];
     if(getcwd(cwd,sizeof(cwd))!=NULL){
@@ -290,21 +292,24 @@ int main(int argc, char *argv[]) {
           //printf("%d\n", err);
           if (err == -1)
           printf("%s\n", strerror(errno));
-        }
 
-        int f = fork();
-
-        if(f){
-          wait(NULL);
         }
-        if(!f && strcmp(args[0], "cd")){
-          execvp(args[0], args);
-          if(errno ==2){
-            printf("%s: command not found \n",args[0]);
+        else{
+
+          int f = fork();
+
+          if(f){
+            wait(NULL);
           }
-
+          if(!f && strcmp(args[0], "cd")){
+            execvp(args[0], args);
+            if(errno ==2){
+              printf("%s: command not found \n",args[0]);
+            }
+            
+          }
+          free(args);
         }
-        free(args);
       }
 
     }
