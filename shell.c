@@ -278,7 +278,7 @@ int main(int argc, char *argv[]) {
         char ** args = parse_args(separgs[i], " " );
 
         if (!strcmp(args[0], "exit")) {
-          printf("Exiting shell...\n");
+          //printf("Exiting shell...\n");
           exit(0);
         }
 
